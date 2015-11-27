@@ -1,0 +1,10 @@
+# qiime_parameters.txt
+
+# Alpha diversity parameters
+alpha_diversity:metrics	chao1,observed_species
+
+# Beta diversity parameters
+beta_diversity:metrics	bray_curtis,unweighted_unifrac,weighted_unifrac
+
+
+
