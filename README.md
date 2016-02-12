@@ -34,4 +34,4 @@ To convert the R markdown to html use the command: **render(â€œdairy_breeds.Rmdâ
  8. library(knitr)
  9. render("dairy_breeds/dairy_breeds.Rmd")
 
-The rendered html version can be found [here](./dairy_breeds.html)
+The rendered html version can be found [here](dairy_breeds.html)
