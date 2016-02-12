@@ -98,7 +98,6 @@ pdf("FigS1.pdf", height = 6, width = 6)
 production_plot
 dev.off()
 ```
-![cow_measures](FigS1.png)
 
 ```{r}
 library(car)
