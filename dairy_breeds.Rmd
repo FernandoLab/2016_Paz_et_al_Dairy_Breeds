@@ -824,14 +824,10 @@ LEfSe was used to determine OTUs that differ
 wget https://bitbucket.org/nsegata/lefse/get/default.zip -O lefse.zip
 unzip lefse.zip
 mv nsegata* lefse
-```
 
-```{r, engine='bash'}
 python lefse/format_input.py breed_abundance.txt breed_lefse_format.txt -c 1 -u 2 -o 1000000
 python lefse/run_lefse.py breed_lefse_format.txt breed_lefse_result.txt
-```
 
-```{r, engine='bash'}
 python lefse/format_input.py method_abundance.txt method_lefse_format.txt -c 1 -u 2 -o 1000000 
 python lefse/run_lefse.py method_lefse_format.txt method_lefse_result.txt
 ```
