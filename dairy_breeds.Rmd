@@ -42,18 +42,16 @@ To convert the R markdown to html use the command: **render(â€œdairy_breeds.Rmdâ
 The following packages and knitR settings were used to compile this Markdown:
 
 ```{r}
-#install.packages("ggplot2", repos='http://cran.us.r-project.org')
-#install.packages("matrixStats", repos='http://cran.us.r-project.org')
-#install.packages("plyr", repos='http://cran.us.r-project.org')
-#install.packages("tidyr", repos='http://cran.us.r-project.org')
-#install.packages("biom", repos='http://cran.us.r-project.org')
-#install.packages("gplots", repos='http://cran.us.r-project.org')
-#install.packages("RColorBrewer", repos='http://cran.us.r-project.org')
-#install.packages("vegan", repos='http://cran.us.r-project.org')
-
-
-#install.packages("mvtnorm", repos='http://cran.us.r-project.org')
-#install.packages("modeltools", repos='http://cran.us.r-project.org')
+install.packages("ggplot2", repos='http://cran.us.r-project.org')
+install.packages("matrixStats", repos='http://cran.us.r-project.org')
+install.packages("plyr", repos='http://cran.us.r-project.org')
+install.packages("tidyr", repos='http://cran.us.r-project.org')
+install.packages("biom", repos='http://cran.us.r-project.org')
+install.packages("gplots", repos='http://cran.us.r-project.org')
+install.packages("RColorBrewer", repos='http://cran.us.r-project.org')
+install.packages("vegan", repos='http://cran.us.r-project.org')
+install.packages("mvtnorm", repos='http://cran.us.r-project.org')
+install.packages("modeltools", repos='http://cran.us.r-project.org')
 install.packages("coin", repos='http://cran.us.r-project.org')
 
 sessionInfo()
