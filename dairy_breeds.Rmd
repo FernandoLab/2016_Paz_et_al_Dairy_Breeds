@@ -1,3 +1,11 @@
+---
+Title: "Rumen microbial composition in Holstein and Jersey cows is different under same dietary condition and is not affected by sampling method"
+Author: "Henry A. Paz (henry.paz@unl.edu)"
+Date: "February 14, 2016"
+Output:
+  html_document:
+    keep_md: yes
+---
 #Introduction
 
 This is a R Markdown file to accompany the mansucript: “Rumen microbial composition in Holstein and Jersey cows is different under same dietary condition and is not affected by sampling method” by Paz et al. 2016 in AEM. It was written in [R markdown](http://rmarkdown.rstudio.com) and converted to html using the R knitr package. This enables us to embed the results of our analyses directly into the text to allow for a reproducible data analysis pipeline. A [github repository is available](https://github.com/enriquepaz/2016_Paz_et_al_Dairy_Breeds).

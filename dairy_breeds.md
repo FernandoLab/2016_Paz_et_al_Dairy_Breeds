@@ -22,7 +22,7 @@ Simply download the bash script from the github repository and run it (provide t
   1. Press enter to view the license agreement
   2. Press enter to read the license and q to exit
   3. Accept the terms
-  4. Prompts you where to install anaconda. Simply type anaconda to create a directory within the current directory. Should be: [/Users/user/anaconda] >>> anaconda
+  4. Prompts you where to install anaconda. Simply type anaconda to create a directory within the current directory. Should be: [/Users/user/anaconda2] >>> anaconda
   5. No to prepend anaconda to your path. Choosing yes does not impact the installation.
   6. Will be asked a few times if you wish to proceed with installing the packages, agree to it.
   7. After installation, enter ‘source anaconda/bin/activate projectEnv’ on the command line to activate the virtual enviornment with all dependencies.
@@ -31,28 +31,28 @@ To convert the R markdown to html use the command: **render(“dairy_breeds.Rmd�
 
  1. source anaconda/bin/activate projectEnv
  2. R
- 3. install.packages("rmarkdown", repos=‘http://cran.us.r-project.org’)
- 4. install.packages("knitr", repos=‘http://cran.us.r-project.org’)
- 5. library(rmarkdown)
- 6. library(knitr)
- 7. render("dairy_breeds.Rmd")
+ 3. install.packages("rmarkdown", repos='http://cran.us.r-project.org')
+ 4. install.packages("knitr", repos='http://cran.us.r-project.org')
+ 5. source("http://bioconductor.org/biocLite.R")
+ 6. biocLite("Heatplus", ask=FALSE, suppressUpdates=TRUE)
+ 7. library(rmarkdown)
+ 8. library(knitr)
+ 9. render("dairy_breeds/dairy_breeds.Rmd")
  
 The following packages and knitR settings were used to compile this Markdown:
 
-```{r, engine='bash', eval=FALSE}
+```{r}
 install.packages("ggplot2", repos='http://cran.us.r-project.org')
 install.packages("matrixStats", repos='http://cran.us.r-project.org')
 install.packages("plyr", repos='http://cran.us.r-project.org')
 install.packages("tidyr", repos='http://cran.us.r-project.org')
 install.packages("biom", repos='http://cran.us.r-project.org')
 install.packages("gplots", repos='http://cran.us.r-project.org')
-install.packages("Heatplus", repos='http://cran.us.r-project.org')
 install.packages("RColorBrewer", repos='http://cran.us.r-project.org')
-install.packages("vegan", repos='https://github.com/vegandevs/vegan')
-install.packages("vegan", repos="http://R-Forge.R-project.org")
-install.packages("vegan", dependencies = TRUE)
 install.packages("vegan", repos='http://cran.us.r-project.org')
-install.packages("vegan", repos='https://cran.r-project.org/bin/macosx/contrib/3.2/vegan_2.3-1.tgz')
+install.packages("mvtnorm", repos='http://cran.us.r-project.org')
+install.packages("modeltools", repos='http://cran.us.r-project.org')
+install.packages("coin", repos='http://cran.us.r-project.org')
 
 sessionInfo()
 
@@ -90,7 +90,7 @@ production_summary <- ddply(production_long, c("Breed", "Measure"), summarise, N
 # Error bars represent standard error of the mean
 production_plot <- ggplot(production_summary, aes(x=Measure, y=mean, fill=Breed)) + ylab("kg/d") + scale_fill_brewer("Paired") + geom_bar(position=position_dodge(), stat="identity", color = "black", size = 0.5, width = 0.9) + geom_errorbar(aes(ymin=mean-se, ymax=mean+se), size = 0.5, width = 0.3, position=position_dodge(.9)) + theme(legend.title = element_blank(), axis.text = element_text(color = "black", size = 12, face = "bold"), axis.title = element_text(color = "black", size = 12, face = "bold"), legend.text = element_text(color = "black", size = 10, face = "bold")) + scale_x_discrete(breaks=c("DMI", "MY"), labels=c("Dry Matter Intake", "Millk Yield"))  
 
-png("FigS1.png", units = "in", height = 6, width = 6, res = 300)
+png("FigS1.png", units = "in", height = 5, width = 6, res = 300)
 production_plot
 dev.off()
 
@@ -143,15 +143,16 @@ Because of file size limit in GitHub, the previously described seqs.fastq and se
 Demultiplex the sequences in the library using the mapping file.
 
 ```{r, engine='bash', eval=FALSE}
+
 split_libraries.py -f seqs.fna -b variable_length -l 0 -L 1000 -x -M 1  -m mappingfile.txt -o seqs_demultiplexed
 ```
 
 The seqs_demultiplexed.fna generated is provided. Remove primer and subsequent sequence.
 
 ```{r, engine='bash'}
-wget https://raw.githubusercontent.com/enriquepaz/dairy_breeds/master/seqs_demultiplexed.fna.tar.gz 
+wget https://raw.githubusercontent.com/enriquepaz/2016_Paz_et_al_Dairy_Breeds/master/seqs_demultiplexed.fna.tar.gz 
 
-wget https://raw.githubusercontent.com/enriquepaz/dairy_breeds/master/mappingfile.txt 
+wget https://raw.githubusercontent.com/enriquepaz/2016_Paz_et_al_Dairy_Breeds/master/mappingfile.txt
 
 tar -zxvf seqs_demultiplexed.fna.tar.gz
 
@@ -161,11 +162,11 @@ truncate_reverse_primer.py -f seqs_demultiplexed.fna -m mappingfile.txt -z trunc
 Trim the sequences to a fixed length (130 basepairs for this study) using 2 custom perl scripts to improve OTU selection in UPARSE downstream.  
 
 ```{r, engine='bash'}
-wget https://raw.githubusercontent.com/enriquepaz/dairy_breeds/master/Scripts/min_max_length.pl 
+wget https://raw.githubusercontent.com/enriquepaz/2016_Paz_et_al_Dairy_Breeds/master/Scripts/min_max_length.pl 
 
 chmod 775 min_max_length.pl
 
-wget https://raw.githubusercontent.com/enriquepaz/dairy_breeds/master/Scripts/second_min_max_length.pl
+wget https://raw.githubusercontent.com/enriquepaz/2016_Paz_et_al_Dairy_Breeds/master/Scripts/second_min_max_length.pl
 
 chmod 775 second_min_max_length.pl
 
@@ -185,7 +186,7 @@ mothur "#reverse.seqs(fasta=seqs_finaltrimmed.fasta)"
 Use a custom perl script to convert the fasta file from QIIME format to UPARSE format to generate the OTU table.
 
 ```{r, engine='bash', results='hide'}
-wget https://raw.githubusercontent.com/enriquepaz/dairy_breeds/master/Scripts/qiime_to_usearch.pl
+wget https://raw.githubusercontent.com/enriquepaz/2016_Paz_et_al_Dairy_Breeds/master/Scripts/qiime_to_usearch.pl
 
 chmod 775 qiime_to_usearch.pl
 
@@ -197,7 +198,7 @@ mv format.fasta dairybreeds.format.fasta
 Run the sequences through the UPARSE pipeline to pick OTUs.
 
 ```{r, engine='bash'}
-svn export https://github.com/enriquepaz/dairy_breeds/trunk/Scripts/usearch_python_scripts --non-interactive --trust-server-cert
+svn export https://github.com/enriquepaz/2016_Paz_et_al_Dairy_Breeds/trunk/Scripts/usearch_python_scripts --non-interactive --trust-server-cert
 
 chmod -R 775 usearch_python_scripts
 
@@ -205,8 +206,7 @@ chmod 775 usearch_python_scripts/uc2otutab.py
 
 chmod 775 usearch_python_scripts/fasta_number.py
 
-wget https://raw.githubusercontent.com/enriquepaz/dairy_breeds/master/gold.fasta.gz 
-
+wget https://raw.githubusercontent.com/enriquepaz/2016_Paz_et_al_Dairy_Breeds/master/gold.fasta.gz 
 gzip -d gold.fasta.gz
 
 chmod 775 gold.fasta
@@ -233,7 +233,7 @@ cp usearch_results/dairybreeds.otu_table.txt ./
 Assign taxonomy to the OTU representative sequences:
 
 ```{r, engine='bash'}
-wget https://raw.githubusercontent.com/enriquepaz/dairy_breeds/master/gg_13_5_otus.tar.gz  
+wget https://raw.githubusercontent.com/enriquepaz/2016_Paz_et_al_Dairy_Breeds/master/gg_13_5_otus.tar.gz  
 
 tar -zxvf gg_13_5_otus.tar.gz
 
@@ -270,9 +270,9 @@ Sequences were aligned using the [RDP aligner](https://pyro.cme.msu.edu/login.sp
 Output files from the RDP aligner are provided.
 
 ```{r, engine='bash', results='hide'}
-wget https://raw.githubusercontent.com/enriquepaz/dairy_breeds/master/aligned_dairybreeds.otus2.fasta
+wget https://raw.githubusercontent.com/enriquepaz/2016_Paz_et_al_Dairy_Breeds/master/aligned_dairybreeds.otus2.fasta
 
-wget https://raw.githubusercontent.com/enriquepaz/dairy_breeds/master/aligned_dairybreeds.otus2.fasta_alignment_summary.txt 
+wget https://raw.githubusercontent.com/enriquepaz/2016_Paz_et_al_Dairy_Breeds/master/aligned_dairybreeds.otus2.fasta_alignment_summary.txt 
 ```
 
 Make a file containing all the OTUs that aligned properly
@@ -325,12 +325,20 @@ Note from QIIME: "If the lines for some categories do not extend all the way to 
 
 ```{r, engine='bash'}
 biom summarize-table -i dairybreeds.otu_table.tax.final.biom -o dairybreeds.otu_table.tax.final.summary.txt
+```
 
+```{r, engine='bash', eval=FALSE}
 single_rarefaction.py -i dairybreeds.otu_table.tax.final.biom -d 12141 -o dairybreeds.otu_table_rarefied.biom 
+```
 
+```{r, engine='bash'}
+wget https://raw.githubusercontent.com/enriquepaz/2016_Paz_et_al_Dairy_Breeds/master/dairybreeds.otu_table_rarefied.biom
+```
+
+```{r, engine='bash'}
 alpha_diversity.py -i dairybreeds.otu_table_rarefied.biom -m chao1,observed_otus,goods_coverage -o alpha_rarefaction_even.txt
 
-wget https://raw.githubusercontent.com/enriquepaz/dairy_breeds/master/qiime_parameters.txt 
+wget https://raw.githubusercontent.com/enriquepaz/2016_Paz_et_al_Dairy_Breeds/master/qiime_parameters.txt
 
 alpha_rarefaction.py -i dairybreeds.otu_table_rarefied.biom -n 10 --min_rare_depth 1 -m mappingfile.txt -p qiime_parameters.txt -o alpha_rarefaction_plots_even
 ```
