@@ -1,6 +1,6 @@
 ---
 Title: "Rumen microbial composition in Holstein and Jersey cows is different under same dietary condition and is not affected by sampling method"
-Author: "Henry A. Paz (henry.paz@unl.edu)"
+Author: "Henry A. Paz (henry.paz@huskers.unl.edu)"
 Date: "February 14, 2016"
 Output:
   html_document:

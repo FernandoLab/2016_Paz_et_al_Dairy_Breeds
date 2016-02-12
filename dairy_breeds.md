@@ -401,7 +401,6 @@ pdf("FigS2.pdf", height = 6, width = 12)
 multiplot(rare_chao1_plot, rare_otu_plot, cols=2)
 dev.off()
 ```
-![alpha_diversity](FigS2.png)
 
 Perform a two-sided t-test to evaluate alpha diversity metrics
 
@@ -469,7 +468,6 @@ pdf("FigS3.pdf", height = 12, width = 17)
 ggplot(plot_taxa_long, aes(x=Samples, y=Proportion, fill=Phylum)) + geom_bar(stat="identity") + scale_fill_manual(values= c("#FF0000", "#0000FF", "#FFA500", "#556B2F", "#800080", "#FFFF00", "#00FFFF", "#FFC0CB", "#5F9EA0", "#A52A2A", "#808080", "#00FF00", "#000080", "#ADD8E6", "#E9967A", "#00FA9A", "#DA70D6", "#FFD700")) + theme(axis.text = element_text(color = "black", size = 11, face = "bold"), axis.title = element_text(color = "black", size = 14, face = "bold"), legend.text = element_text(size = 12, face = "bold"), legend.title = element_text(size = 12))
 dev.off()
 ```
-![phylum](FigS3.png)
 
 #Shared OTUs and Sequences
 
@@ -526,10 +524,6 @@ method_boolean_df <- as.data.frame(method_sub > 0 + 0)
 method_venn <- venn(method_boolean_df)
 dev.off()
 ```
-![venn_Holstein](FigS4a.png)
-![venn_Jersey](FigS4b.png)
-![venn_Breed](FigS4c.png)
-![venn_Method](FigS4d.png)
 
 Calculate the number of shared sequences
 
@@ -686,7 +680,6 @@ pdf("Fig2.pdf", height = 8, width = 26)
 multiplot(all_pc_plot, breed_pc_plot, method_pc_plot, cols = 3)
 dev.off()
 ```
-![pcoa_plot](Fig2.png)
 
 #Community Statistics
 
@@ -780,7 +773,6 @@ pdf("FigS5.pdf", height = 8, width = 8)
 heatmap.2(as.matrix(data_abun), Rowv = as.dendrogram(row.clus), Colv = as.dendrogram(col.clus), col = scalewhiteblack, margins = c(2, 8), trace = "none", density.info = "none", labCol = "", xlab = "OTUs", ylab = "Samples", lhei = c(2, 8))
 dev.off()
 ```
-![heatmap_all](FigS5.png)
 
 LEfSe was used to determine different OTUs between breeds and sampling methods
 
@@ -975,5 +967,4 @@ pdf("Fig3b.pdf", height = 8, width = 8)
 heatmap.2(as.matrix(breed_abun), Rowv = as.dendrogram(row.clus), Colv = as.dendrogram(col.clus), col = scalewhiteblack, margins = c(10, 7), trace = "none", density.info = "none", labCol = breed_abun_fam$taxonomy, xlab = "Family", ylab = "Samples", lhei = c(2, 8))
 dev.off()
 ```
-![heatmap_breed](Fig3a.png)
-![heatmap_breed_abun](Fig3b.png)
+

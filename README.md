@@ -34,4 +34,4 @@ To convert the R markdown to html use the command: **render(â€œdairy_breeds.Rmdâ
  8. library(knitr)
  9. render("dairy_breeds/dairy_breeds.Rmd")
 
-The rendered html version can be found [here](https://github.com/enriquepaz/2016_Paz_et_al_Dairy_Breeds/blob/master/dairy_breeds.html)
+The rendered html version can be found [here](https://raw.githubusercontent.com/enriquepaz/2016_Paz_et_al_Dairy_Breeds/master/dairy_breeds.html)
