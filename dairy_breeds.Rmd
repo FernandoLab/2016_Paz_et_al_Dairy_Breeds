@@ -98,7 +98,7 @@ production_summary <- ddply(production_long, c("Breed", "Measure"), summarise, N
 # Error bars represent standard error of the mean
 production_plot <- ggplot(production_summary, aes(x=Measure, y=mean, fill=Breed)) + ylab("kg/d") + scale_fill_brewer("Paired") + geom_bar(position=position_dodge(), stat="identity", color = "black", size = 0.5, width = 0.9) + geom_errorbar(aes(ymin=mean-se, ymax=mean+se), size = 0.5, width = 0.3, position=position_dodge(.9)) + theme(legend.title = element_blank(), axis.text = element_text(color = "black", size = 12, face = "bold"), axis.title = element_text(color = "black", size = 12, face = "bold"), legend.text = element_text(color = "black", size = 10, face = "bold")) + scale_x_discrete(breaks=c("DMI", "MY"), labels=c("Dry Matter Intake", "Millk Yield"))  
 
-png("FigS1.png", units = "in", height = 5, width = 6, res = 300)
+png("FigS1.png", units = "in", height = 4, width = 6, res = 300)
 production_plot
 dev.off()
 
