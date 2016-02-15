@@ -12,7 +12,7 @@ This is a R Markdown file to accompany the mansucript: “Rumen microbial compos
 
 ##BEFORE YOU RENDER:
 
-The analysis from Paz et al., 2016 can be recreated by using the associated R Markdown file. This is setup to be ran on Mac OS X and was initially performed with 8 GB RAM. No root access is neeeded. Analyses should also work in a linux environment as well if the linux versions of USEARCH and [anaconda package manager](https://www.continuum.io/downloads) are used.
+The analysis from Paz et al., 2016 can be recreated by using the associated R Markdown file. This is setup to be ran on Mac OS X and was initially performed with 4 GB RAM. No root access is neeeded. Analyses should also work in a linux environment as well if the linux versions of USEARCH and [anaconda package manager](https://www.continuum.io/downloads) are used.
 
   1. Run the bash script to create a virtual enironment and download/install programs **LOCALLY** with the anaconda package manager. This will recreate the same enivronment used during the analyses of the data in the manuscript.
   2. Render the R Markdown file with knitR to recreate the workflow and outputs.
@@ -272,6 +272,7 @@ filter_samples_from_otu_table.py -i dairybreeds.otu_table.tax.biom -o dairybreed
 ```
 
 Sequences were aligned using the [RDP aligner](https://pyro.cme.msu.edu/login.spr). The aligned_dairybreeds.otus2.fasta_alignment_summary.txt obtained from the alignment is provided. This file was used to assess OTUs that did not aligned properly based on the following criteria:
+
   1. The minimum starting position was 324. As previously described, sequences were trimmed to be 130 basepairs in length and since the RDP aligner sets the end position to be 454, sequences must start at 324 to be 130 basepairs (i.e. 454-324=130).
   2. The maximun starting position was 354. The minimum number of basepairs accepted was 100, thus these sequences should start at 354 to contain 100 basepairs (i.e. 454-354=100).
 
