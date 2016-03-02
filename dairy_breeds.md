@@ -1,3 +1,11 @@
+---
+Title: "Rumen microbial composition in Holstein and Jersey cows is different under same dietary condition and is not affected by sampling method"
+Author: "Henry A. Paz (henry.paz@huskers.unl.edu)"
+Date: "February 14, 2016"
+Output:
+  html_document:
+    keep_md: yes
+---
 #Introduction
 
 This is a R Markdown file to accompany the mansucript: “Rumen microbial composition in Holstein and Jersey cows is different under same dietary condition and is not affected by sampling method” by Paz et al. 2016 in AEM. It was written in [R markdown](http://rmarkdown.rstudio.com) and converted to html using the R knitr package. This enables us to embed the results of our analyses directly into the text to allow for a reproducible data analysis pipeline. A [github repository is available](https://github.com/enriquepaz/2016_Paz_et_al_Dairy_Breeds).
@@ -83,19 +91,46 @@ library(plyr)
 library(ggplot2)
 
 production_wide <- read.table("production_measures.txt", header = T, sep = "\t")
-production_long <- gather(production_wide, Measure, kg_d, DMI:MY)
+production_long <- gather(production_wide, Measure, kg_d, DMI:FE)
 
-production_summary <- ddply(production_long, c("Breed", "Measure"), summarise, N = length(kg_d), mean = mean(kg_d), sd = sd(kg_d), se = sd / sqrt(N))
+data_summary <- ddply(production_long, c("Breed", "Measure"), summarise, N = length(kg_d), mean = mean(kg_d), sd = sd(kg_d), se = sd / sqrt(N))
+
+production_summary <- subset(data_summary, Measure != "FE")
+efficiency_summary <- subset(data_summary, Measure == "FE")
 
 # Error bars represent standard error of the mean
 production_plot <- ggplot(production_summary, aes(x=Measure, y=mean, fill=Breed)) + ylab("kg/d") + scale_fill_brewer("Paired") + geom_bar(position=position_dodge(), stat="identity", color = "black", size = 0.5, width = 0.9) + geom_errorbar(aes(ymin=mean-se, ymax=mean+se), size = 0.5, width = 0.3, position=position_dodge(.9)) + theme(legend.title = element_blank(), axis.text = element_text(color = "black", size = 12, face = "bold"), axis.title = element_text(color = "black", size = 12, face = "bold"), legend.text = element_text(color = "black", size = 10, face = "bold")) + scale_x_discrete(breaks=c("DMI", "MY"), labels=c("Dry Matter Intake", "Millk Yield"))  
 
-png("FigS1.png", units = "in", height = 5, width = 6, res = 300)
-production_plot
+efficiency_plot <- ggplot(efficiency_summary, aes(x=Measure, y=mean, fill=Breed)) + xlab("Feed Efficiency") + ylab("kg milk/kg dry matter intake") + scale_fill_brewer("Paired") + geom_bar(position=position_dodge(), stat="identity", color = "black", size = 0.5, width = 0.4) + geom_errorbar(aes(ymin=mean-se, ymax=mean+se), size = 0.5, width = 0.1, position=position_dodge(.4)) + theme(legend.title = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank(), axis.text = element_text(color = "black", size = 12, face = "bold"), axis.title = element_text(color = "black", size = 12, face = "bold"), legend.text = element_text(color = "black", size = 10, face = "bold")) 
+
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+  library(grid)
+  plots <- c(list(...), plotlist)
+  numPlots = length(plots)
+  if (is.null(layout)) {
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                     ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+  if (numPlots==1) {
+    print(plots[[1]])
+  } else {
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+    for (i in 1:numPlots) {
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+      
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
+
+png("FigS1.png", units = "in", height = 4, width = 12, res = 300)
+multiplot(production_plot, efficiency_plot, cols=2)
 dev.off()
 
-pdf("FigS1.pdf", height = 6, width = 6)
-production_plot
+pdf("FigS1.pdf", height = 6, width = 12)
+multiplot(production_plot, efficiency_plot, cols=2)
 dev.off()
 ```
 
@@ -125,6 +160,17 @@ leveneTest (cow_measures$MY~cow_measures$Breed)
 #default options used: mu = 0, alt = "two.sided", conf = 0.95, paired = F
 
 t.test(cow_measures$MY~cow_measures$Breed, var.eq=T)
+
+#Levene test
+#Ho: Variances of breeds feed efficiency are equal
+leveneTest (cow_measures$FE~cow_measures$Breed)
+
+#T test
+#Ho: mean FE Holstein = mean FE Jersey 
+#Two-sided t test
+#default options used: mu = 0, alt = "two.sided", conf = 0.95, paired = F
+
+t.test(cow_measures$FE~cow_measures$Breed, var.eq=T)
 ```
 
 #Data Curation
@@ -370,28 +416,6 @@ pd <- position_dodge(width = 275)
 rare_otu_plot <- ggplot(alpha_rare, aes(x = Seqs.Sample, y = observed_otus.Ave., colour = Description, group = Description, ymin = observed_otus.Ave. - observed_otus.Err., ymax = observed_otus.Ave. + observed_otus.Err.)) + geom_line(position = pd) + geom_pointrange(position = pd) + scale_colour_manual(values = c("#FF0000", "#0000FF", "#FFA500", "#006400", "#FF00FF"), limits=c("Holstein", "HolsteinC", "Jersey", "Cannula", "TubingH"), labels=c("Holstein", "HolsteinC", "Jersey", "Cannula", "Tubing")) + labs(x = "Sequences per Sample", y = "Mean Observed OTUs") + theme(legend.title = element_blank(), axis.text = element_text(color = "black", size = 8, face = "bold"), axis.title = element_text(color = "black", size = 12, face = "bold"), legend.text = element_text(face = "bold"), strip.text = element_text(size=12, face = "bold")) + facet_grid(~label)
 
 rare_chao1_plot <- ggplot(alpha_rare, aes(x = Seqs.Sample, y = chao1.Ave., colour = Description, group = Description, ymin = chao1.Ave. - chao1.Err., ymax = chao1.Ave. + chao1.Err.)) + geom_line(position = pd) + geom_pointrange(position = pd) + scale_colour_manual(values = c("#FF0000", "#0000FF", "#FFA500", "#006400", "#FF00FF"), limits=c("Holstein", "HolsteinC", "Jersey", "Cannula", "TubingH"), labels=c("Holstein", "HolsteinC", "Jersey", "Cannula", "Tubing")) + labs(x = "Sequences per Sample", y = "Mean Chao1") + theme(legend.title = element_blank(), axis.text = element_text(color = "black", size = 8, face = "bold"), axis.title = element_text(color = "black", size = 12, face = "bold"), legend.text = element_text(face = "bold"), strip.text = element_text(size=12, face = "bold")) + facet_grid(~label)
-
-multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
-  library(grid)
-  plots <- c(list(...), plotlist)
-  numPlots = length(plots)
-  if (is.null(layout)) {
-    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
-                     ncol = cols, nrow = ceiling(numPlots/cols))
-  }
-  if (numPlots==1) {
-    print(plots[[1]])
-  } else {
-    grid.newpage()
-    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
-    for (i in 1:numPlots) {
-      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
-      
-      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
-                                      layout.pos.col = matchidx$col))
-    }
-  }
-}
 
 png("FigS2.png", units = "in", height = 6, width = 12, res = 300)
 multiplot(rare_chao1_plot, rare_otu_plot, cols=2)
@@ -967,4 +991,3 @@ pdf("Fig3b.pdf", height = 8, width = 8)
 heatmap.2(as.matrix(breed_abun), Rowv = as.dendrogram(row.clus), Colv = as.dendrogram(col.clus), col = scalewhiteblack, margins = c(10, 7), trace = "none", density.info = "none", labCol = breed_abun_fam$taxonomy, xlab = "Family", ylab = "Samples", lhei = c(2, 8))
 dev.off()
 ```
-
